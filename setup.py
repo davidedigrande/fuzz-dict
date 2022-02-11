@@ -13,7 +13,7 @@ setup(
         name="fuzzydict", 
         version=VERSION,
         author="Davide Di Grande",
-        author_email="davidedigrande94@gmail.com>",
+        author_email="davidedigrande94@gmail.com",
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
