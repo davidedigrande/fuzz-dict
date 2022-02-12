@@ -3,12 +3,12 @@ from fuzzywuzzy import process
 
 
 class FuzDict(dict):
-    def __new__(cls, threshold:int=80, dict:dict={}, get_only:bool=False, *args, **kwargs):
+    def __new__(cls, threshold:int=80, get_only:bool=False, *args, **kwargs) -> dict:
         if not type(threshold) is int:
             raise ValueError("Threshold must be an integer.")
 
         if 0 >= threshold >= 100:
-            return dict
+            return super(*args, **kwargs)
 
         else:
             return super(FuzDict, cls).__new__(cls, threshold, dict, get_only, *args, **kwargs)
