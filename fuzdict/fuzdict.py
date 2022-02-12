@@ -3,6 +3,10 @@ from fuzzywuzzy import process
 
 
 class FuzDict(dict):
+    """
+    FuzDict is a python dictionary that implements Fuzzy Logic as a way to match keys.
+    This is implies that suitable values for creating keys are only of str type.
+    """
     def __new__(cls, threshold:int=80, get_only:bool=False, *args, **kwargs) -> dict:
         if not type(threshold) is int:
             raise ValueError("Threshold must be an integer.")
