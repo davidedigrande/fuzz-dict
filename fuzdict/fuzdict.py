@@ -43,5 +43,16 @@ class FuzDict(dict):
         __k = self._match_key(__k)
         return super().get(__k, __default)
 
-    def update() -> Any:
-        pass # TODO
+    def update(self, other:dict) -> None:
+        if not isinstance(other, dict):
+            raise ValueError(f"{type(self)} only supports updating from another {type(self)} instance. Received {type(other)} instead.")
+
+        for k, v in other.items():
+            self.__setitem__(k, v)
+    
+    def __iadd__(self, other:dict) -> FuzDict:
+        self.update(other)
+        return self
+        
+    def extend(self, other:dict) -> FuzDict:
+        return self.__iadd__(other)
