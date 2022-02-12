@@ -4,76 +4,44 @@ from fuzzywuzzy import process
 
 class FuzDict(dict):
     """
-    FuzDict is a python dictionary that implements Fuzzy Logic as a way to match keys.
+    FuzDict is a simple python dictionary that implements Fuzzy Logic as a way to match keys.
     This is implies that suitable values for creating keys are only of str type.
     """
-    def __new__(cls, threshold:int=80, get_only:bool=False, *args, **kwargs) -> dict:
-        if not type(threshold) is int:
-            raise ValueError("Threshold must be an integer.")
-
-        if 0 >= threshold >= 100:
-            return super(*args, **kwargs)
-
-        else:
-            return super(FuzDict, cls).__new__(cls, threshold, dict, get_only, *args, **kwargs)
-
-    def __init__(self, threshold:int=80, dict:dict={}, get_only:bool=False, *args, **kwargs):
+    def __init__(self, threshold:int=80, get_only:bool=False):
         self._threshold = threshold
-        self._get_only = get_only
-        super().__init__(*args, **kwargs)
-        self.update(dict)
+        super().__init__()
 
     @property
     def threshold(self):
         return self._threshold
-    
-    @property
-    def get_only(self):
-        return self._get_only
+
+    def _key_typecheck(self, __k):
+        if type(__k) is not str:
+            raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
+
+    def _match_key(self, key:str) -> str:       
+        match, score = process.extractOne(key, self.keys()) or ("", 0)
+        if score > self.threshold:
+            key = match
+        return key
          
     def __getitem__(self, __k:str) -> Any:
-        if type(__k) is not str:
-            raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
+        self._key_typecheck(__k)
 
-        value = super().get(__k, None)
-        if value:
-            return value
-
-        match, score = process.extractOne(__k, self.keys()) or ("", 0)
-        if score > self.threshold:
-            return super().__getitem__(match)
-        
-        raise KeyError(__k)
+        __k = self._match_key(__k)
+        return super().__getitem__(__k)
     
     def __setitem__(self, __k:str, v:Any) -> None:
-        if type(__k) is not str:
-            raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
-
-        if self.get_only:
-            return super().__setitem__(__k, v)
-
-        match, score = process.extractOne(__k, self.keys()) or ("", 0)
-        if score > self.threshold:
-            return super().__setitem__(match, v)
-
+        self._key_typecheck(__k)
+        
+        __k = self._match_key(__k)
         return super().__setitem__(__k, v)
     
-    def get(self, __k:str, __default:Any=None, exact:bool=False):
-        if type(__k) is not str:
-            raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
-
-        value = super().get(__k, None)
-        if value:
-            return value
-
-        if exact:
-            return value or __default
-
-        match, score = process.extractOne(__k, self.keys()) or ("", 0)
-        if score > self.threshold:
-            return super().__getitem__(match)
+    def get(self, __k:str, __default:Any=None) -> Any:
+        self._key_typecheck(__k)
         
-        return __default
-    
+        __k = self._match_key(__k)
+        return super().get(__k, __default)
 
-
+    def update() -> Any:
+        pass # TODO
