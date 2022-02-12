@@ -14,10 +14,18 @@ class FuzDict(dict):
             return super(FuzDict, cls).__new__(cls, threshold, dict, get_only, *args, **kwargs)
 
     def __init__(self, threshold:int=80, dict:dict={}, get_only:bool=False, *args, **kwargs):
-        self.threshold = threshold
-        self.get_only = get_only
+        self._threshold = threshold
+        self._get_only = get_only
         super().__init__(*args, **kwargs)
         self.update(dict)
+
+    @property
+    def threshold(self):
+        return self._threshold
+    
+    @property
+    def get_only(self):
+        return self._get_only
          
     def __getitem__(self, __k:str) -> Any:
         if type(__k) is not str:
