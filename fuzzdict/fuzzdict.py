@@ -1,14 +1,14 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Iterable
 from fuzzywuzzy import process
 
-class FuzDict(dict):
+class FuzzDict(dict):
     """
     FuzDict is a simple python dictionary that implements Fuzzy Logic as a way to match keys.
-    This implies that suitable values for creating keys are only of string type.
-    It also implies that at any time, the dictionary cannot have two or more similar strings, which means in turn that the input order matters.
+    FuzDict only supports string values for creating keys.
+    FuzDict cannot have two or more similar strings, which means in turn that the input order matters.
     """
-    def __init__(self, iterable:Iterable={}, threshold:int=80, set_only:bool=False):
+    def __init__(self, iterable:Iterable={}, threshold:int=80):
         self._threshold = threshold
         super().__init__(iterable)
 
@@ -17,16 +17,14 @@ class FuzDict(dict):
         return self._threshold
 
     def _key_typecheck(self, __k):
-        """Helper function to check if given key is a string."""
+        """Helper function to check if given key is a string as FuzDict only support string keys."""
         if type(__k) is not str:
             raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
 
     def _match_key(self, key:str) -> str:
         """Implements logic for keys fuzzy-match."""    
-        match, score = process.extractOne(key, self.keys()) or ("", 0)
-        if score > self.threshold:
-            key = match
-        return key
+        match, score = process.extractOne(key, self.keys(), score_cutoff=self.threshold) or (None, 0)
+        return match or key
          
     def __getitem__(self, __k:str) -> Any:
         self._key_typecheck(__k)
@@ -53,9 +51,9 @@ class FuzDict(dict):
         for k, v in other.items():
             self.__setitem__(k, v)
     
-    def __iadd__(self, other:dict) -> FuzDict:
+    def __iadd__(self, other:dict) -> FuzzDict:
         self.update(other)
         return self
-        
-    def extend(self, other:dict) -> FuzDict:
+    
+    def extend(self, other:dict) -> FuzzDict:
         return self.__iadd__(other)

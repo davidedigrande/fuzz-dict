@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-NAME = "fuzdict"
+NAME = "fuzzdict"
 VERSION = '0.0.1' 
 DESCRIPTION = 'A Python dictionary with fuzzy-matched keys.'
 LONG_DESCRIPTION = \
