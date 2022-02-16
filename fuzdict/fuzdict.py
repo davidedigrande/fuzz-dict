@@ -17,10 +17,12 @@ class FuzDict(dict):
         return self._threshold
 
     def _key_typecheck(self, __k):
+        """Helper function to check if given key is a string."""
         if type(__k) is not str:
             raise ValueError(f"{type(self)} only supports string objects as keys. Received {type(__k)} instead.")
 
-    def _match_key(self, key:str) -> str:       
+    def _match_key(self, key:str) -> str:
+        """Implements logic for keys fuzzy-match."""    
         match, score = process.extractOne(key, self.keys()) or ("", 0)
         if score > self.threshold:
             key = match
