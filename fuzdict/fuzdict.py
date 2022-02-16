@@ -8,12 +8,12 @@ class FuzDict(dict):
     This implies that suitable values for creating keys are only of string type.
     It also implies that at any time, the dictionary cannot have two or more similar strings, which means in turn that the input order matters.
     """
-    def __init__(self, threshold:int=80, get_only:bool=False):
+    def __init__(self, iterable:Iterable={}, threshold:int=80, set_only:bool=False):
         self._threshold = threshold
-        super().__init__()
+        super().__init__(iterable)
 
     @property
-    def threshold(self):
+    def threshold(self) -> int:
         return self._threshold
 
     def _key_typecheck(self, __k):
