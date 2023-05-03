@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="fuzz-dict",
-    version="0.0.3",
+    version="0.0.4",
     author="Davide Di Grande",
     author_email="davidedigrande.dev@gmail.com",
     long_description=(Path(__file__).parent / "README.md").read_text(),
