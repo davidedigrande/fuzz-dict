@@ -3,7 +3,6 @@ FuzzDict extends Python's built-in ```dict``` to offer an extra API for fuzzy lo
 FuzzDict only supports string values for creating keys.
 
 ## Installation
-
 ```cmd
 pip install fuzz-dict
 ```
